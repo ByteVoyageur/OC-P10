@@ -42,10 +42,14 @@ const EventList = () => {
           />
           <div id='events' className='ListContainer'>
             {filteredEvents.map((event) => (
-              <Modal key={event.id} Content={<ModalEvent event={event} />}>
+              <Modal
+                key={event.id}
+                opened={false} // 初始状态为关闭
+                Content={<ModalEvent event={event} />} // 传递ModalEvent作为内容
+              >
                 {({ setIsOpened }) => (
                   <EventCard
-                    onClick={() => setIsOpened(true)}
+                    onClick={() => setIsOpened(true)} // 点击事件卡片打开模态窗口
                     imageSrc={event.cover}
                     title={event.title}
                     date={new Date(event.date)}

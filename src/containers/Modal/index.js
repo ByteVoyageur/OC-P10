@@ -6,7 +6,6 @@ import './style.scss'
 const Modal = ({ opened, Content, children }) => {
   const [isOpened, setIsOpened] = useState(opened)
 
-  // Use useEffect to synchronize the external 'opened' state
   useEffect(() => {
     setIsOpened(opened)
   }, [opened])
@@ -17,13 +16,13 @@ const Modal = ({ opened, Content, children }) => {
       {isOpened && (
         <div className='modal'>
           <div className='content'>
-            {/* Ensure Content is rendered as a component */}
-            <Content />
+            {/* 直接渲染Content作为React元素 */}
+            {Content}
             <button
               type='button'
               data-testid='close-modal'
               onClick={() => setIsOpened(false)}
-              aria-label='Close' // Accessible label for screen readers
+              aria-label='Close'
             >
               <Icon name='close' />
             </button>
@@ -40,7 +39,7 @@ Modal.defaultProps = {
 
 Modal.propTypes = {
   opened: PropTypes.bool,
-  Content: PropTypes.elementType.isRequired, // Updated to elementType
+  Content: PropTypes.element.isRequired, // nessesary
   children: PropTypes.func.isRequired,
 }
 

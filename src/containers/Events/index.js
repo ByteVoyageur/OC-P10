@@ -14,7 +14,7 @@ const EventList = () => {
   const [type, setType] = useState('all') // default value is 'all'
   const [currentPage, setCurrentPage] = useState(1)
 
-  const filteredEvents = data?.events.filter((event, index) => {
+  const filteredEvents = (data?.events || []).filter((event, index) => {
     // add type filter
     const isTypeMatch = type === 'all' || event.type === type
     const isInCurrentPage =

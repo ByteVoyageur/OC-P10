@@ -15,6 +15,7 @@ export const api = {
     return json.json()
   },
 }
+// api.loadData() is a mock function that returns a promise that resolves to a JSON object.
 
 export const DataProvider = ({ children }) => {
   const [error, setError] = useState(null)
@@ -30,11 +31,13 @@ export const DataProvider = ({ children }) => {
     if (data) return
     getData()
   })
+  // usecallback is used to prevent the getData function from being recreated on every render.
 
   return (
     <DataContext.Provider
       // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
+        // value is an object that contains the data and error states, as well as the getData function.
         data,
         error,
       }}
@@ -49,5 +52,5 @@ DataProvider.propTypes = {
 }
 
 export const useData = () => useContext(DataContext)
-
+// useData is a custom hook that returns the context value.
 export default DataContext

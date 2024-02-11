@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useData } from '../../contexts/DataContext'
 import { getMonth } from '../../helpers/Date'
-
 import './style.scss'
 
 const Slider = () => {
-  const { data } = useData()
+  const { data } = useData() // destructure the data from the context const reuslt = useData() const data = result.data
   const [index, setIndex] = useState(0)
   const byDateDesc = [...(data?.focus || [])].sort(
     (evtA, evtB) => new Date(evtB.date) - new Date(evtA.date)
@@ -45,7 +44,7 @@ const Slider = () => {
         <div className='SlideCard__pagination'>
           {byDateDesc.map((_, radioIdx) => (
             <input
-              key={radioIdx}
+              key={data.title}
               type='radio'
               name='radio-button'
               checked={index === radioIdx}

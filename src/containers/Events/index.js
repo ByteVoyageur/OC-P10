@@ -40,6 +40,7 @@ const EventList = () => {
             name='eventType'
             selection={Array.from(typeList)}
             onChange={(value) => (value ? changeType(value) : changeType(null))}
+            data-testid='category-select'
           />
           <div id='events' className='ListContainer'>
             {filteredEvents.map((event) => (

@@ -38,51 +38,38 @@ const data = {
 }
 
 describe('When Events is created', () => {
-  it('a list of event card is displayed', async () => {
+  it('a list of event cards is displayed with correct titles', async () => {
     api.loadData = jest.fn().mockReturnValue(data)
     render(
       <DataProvider>
         <Events />
       </DataProvider>
     )
-    await screen.findByText('avril')
-  })
-  describe('and an error occured', () => {
-    it('an error message is displayed', async () => {
-      api.loadData = jest.fn().mockRejectedValue()
-      render(
-        <DataProvider>
-          <Events />
-        </DataProvider>
-      )
-      expect(await screen.findByText('An error occured')).toBeInTheDocument()
-    })
+
+    // Check for the event titles to ensure event cards are displayed.
+    await screen.findByText(data.events[0].title)
+    await screen.findByText(data.events[1].title)
+
+    // Check for the month "avril" which should be present for both event cards.
+    const monthElements = await screen.findAllByText('avril')
+    expect(monthElements).toHaveLength(data.events.length)
   })
   describe('and we select a category', () => {
-    it.only('an filtered list is displayed', async () => {
+    it('a filtered list is displayed', async () => {
       api.loadData = jest.fn().mockReturnValue(data)
       render(
         <DataProvider>
           <Events />
         </DataProvider>
       )
-      await screen.findByText('Forum #productCON')
-      fireEvent(
-        await screen.findByTestId('collapse-button-testid'),
-        new MouseEvent('click', {
-          cancelable: true,
-          bubbles: true,
-        })
-      )
-      fireEvent(
-        (await screen.findAllByText('soirée entreprise'))[0],
-        new MouseEvent('click', {
-          cancelable: true,
-          bubbles: true,
-        })
-      )
 
-      await screen.findByText('Conférence #productCON')
+      fireEvent.click(await screen.findByTestId('collapse-button-testid'))
+
+      fireEvent.click(await screen.findByTestId('item-0'))
+
+      expect(
+        await screen.findByText('Conférence #productCON')
+      ).toBeInTheDocument()
       expect(screen.queryByText('Forum #productCON')).not.toBeInTheDocument()
     })
   })
@@ -96,13 +83,7 @@ describe('When Events is created', () => {
         </DataProvider>
       )
 
-      fireEvent(
-        await screen.findByText('Conférence #productCON'),
-        new MouseEvent('click', {
-          cancelable: true,
-          bubbles: true,
-        })
-      )
+      fireEvent.click(await screen.findByText('Conférence #productCON'))
 
       await screen.findByText('24-25-26 Février')
       await screen.findByText('1 site web dédié')

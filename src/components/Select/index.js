@@ -12,6 +12,7 @@ const Select = ({
   titleEmpty,
   label,
   type = 'normal',
+  dataTestId,
 }) => {
   const [value, setValue] = useState(selection[0] || '')
   const [collapsed, setCollapsed] = useState(true)
@@ -25,7 +26,7 @@ const Select = ({
   }
 
   return (
-    <div className={`SelectContainer ${type}`} data-testid='select-testid'>
+    <div className={`SelectContainer ${type}`} data-testid={dataTestId}>
       {label && <div className='label'>{label}</div>}
       <div className='Select'>
         <ul>
@@ -52,8 +53,12 @@ const Select = ({
                   Toutes
                 </li>
               )}
-              {selection.map((s) => (
-                <li key={s} onClick={() => changeValue(s)}>
+              {selection.map((s, index) => (
+                <li
+                  key={s}
+                  onClick={() => changeValue(s)}
+                  data-testid={`item-${index}`}
+                >
                   <input
                     checked={value === s}
                     name={name}
@@ -74,6 +79,7 @@ const Select = ({
           className={collapsed ? 'open' : 'close'}
           onClick={() => setCollapsed(!collapsed)}
           aria-label='Toggle Dropdown' // add aria-label
+          // eslint-disable-next-line react/jsx-no-duplicate-props
         >
           <Arrow />
         </button>
@@ -81,7 +87,6 @@ const Select = ({
     </div>
   )
 }
-
 Select.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func,
@@ -89,6 +94,8 @@ Select.propTypes = {
   titleEmpty: PropTypes.bool,
   label: PropTypes.string,
   type: PropTypes.string,
+  // eslint-disable-next-line react/require-default-props
+  dataTestId: PropTypes.string,
 }
 
 Select.defaultProps = {

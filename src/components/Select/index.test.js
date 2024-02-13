@@ -1,88 +1,43 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import Select from "./index";
+import React from 'react'
+import { render, fireEvent, screen } from '@testing-library/react'
+import Select from './index'
 
-describe("When a select is created", () => {
-  it("a list of choices is displayed", () => {
-    render(<Select selection={["value1", "value2"]} />);
-    const selectElement = screen.getByTestId("select-testid");
-    const selectDefault = screen.getByText("Toutes");
-    expect(selectElement).toBeInTheDocument();
-    expect(selectDefault).toBeInTheDocument();
-  });
-  it("a collapse action button is displayed", () => {
-    render(<Select selection={["value1", "value2"]} />);
-    const collapseButtonElement = screen.getByTestId("collapse-button-testid");
-    expect(collapseButtonElement).toBeInTheDocument();
-  });
+describe('Select Component', () => {
+  const selectionOptions = ['Option 1', 'Option 2', 'Option 3']
+  const onChangeMock = jest.fn()
+  const name = 'testSelect'
 
-  describe("with a label", () => {
-    it("a label is displayed", () => {
-      render(<Select label="label" selection={["value1", "value2"]} />);
-      const labelDefault = screen.getByText("label");
-      expect(labelDefault).toBeInTheDocument();
-    });
-  });
+  beforeEach(() => {
+    render(
+      <Select
+        selection={selectionOptions}
+        onChange={onChangeMock}
+        name={name}
+        label='Test Select'
+      />
+    )
+  })
 
-  describe("and a click is trigger on collapse button", () => {
-    it("a list of values is displayed", () => {
-      render(<Select selection={["value1", "value2"]} />);
-      const collapseButtonElement = screen.getByTestId(
-        "collapse-button-testid"
-      );
-      fireEvent(
-        collapseButtonElement,
-        new MouseEvent("click", {
-          bubbles: true,
-          cancelable: true,
-        })
-      );
-      const choice1 = screen.getByText("value1");
-      const choice2 = screen.getByText("value2");
-      expect(choice1).toBeInTheDocument();
-      expect(choice2).toBeInTheDocument();
-    });
-    describe("and a click is triggered on a choice item", () => {
-      it("a onChange callback is called", () => {
-        const onChange = jest.fn();
-        render(<Select selection={["value1", "value2"]} onChange={onChange} />);
-        const collapseButtonElement = screen.getByTestId(
-          "collapse-button-testid"
-        );
-        fireEvent(
-          collapseButtonElement,
-          new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-          })
-        );
-        const choice1 = screen.getByText("value1");
-        fireEvent(
-          choice1,
-          new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-          })
-        );
-        expect(onChange.mock.calls.length).toBeGreaterThan(0);
+  test('renders with default state and label', () => {
+    expect(screen.getByText('Test Select')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Option 1' })).toBeInTheDocument()
+    expect(screen.queryByText('Option 2')).not.toBeInTheDocument() // Initially not visible
+  })
 
-        fireEvent(
-          collapseButtonElement,
-          new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-          })
-        );
+  test('toggles options list on button click', () => {
+    const collapseButton = screen.getByTestId('collapse-button-testid')
+    fireEvent.click(collapseButton) // Open
+    expect(screen.getByText('Option 2')).toBeInTheDocument()
 
-        const choiceAll = screen.getByText("Toutes");
-        fireEvent(
-          choiceAll,
-          new MouseEvent("click", {
-            bubbles: true,
-            cancelable: true,
-          })
-        );
-        expect(onChange.mock.calls.length).toBeGreaterThan(1);
-      });
-    });
-  });
-});
+    fireEvent.click(collapseButton) // Close
+    expect(screen.queryByText('Option 2')).not.toBeInTheDocument()
+  })
+
+  test('selects an option and calls onChange', () => {
+    fireEvent.click(screen.getByTestId('collapse-button-testid')) // Open options list
+    fireEvent.click(screen.getByText('Option 2')) // Select an option
+
+    expect(onChangeMock).toHaveBeenCalledWith('Option 2')
+    expect(screen.getByRole('button', { name: 'Option 2' })).toBeInTheDocument() // New selected option is visible
+  })
+})

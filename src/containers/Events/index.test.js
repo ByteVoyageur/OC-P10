@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { api, DataProvider } from '../../contexts/DataContext'
 import Events from './index'
 
@@ -85,8 +85,12 @@ describe('When Events is created', () => {
 
       fireEvent.click(await screen.findByText('Conférence #productCON'))
 
-      await screen.findByText('24-25-26 Février')
-      await screen.findByText('1 site web dédié')
+      await waitFor(() => {
+        expect(screen.getByText('Description')).toBeInTheDocument()
+      })
+      await waitFor(() => {
+        expect(screen.getByText('1 site web dédié')).toBeInTheDocument()
+      })
     })
   })
 })

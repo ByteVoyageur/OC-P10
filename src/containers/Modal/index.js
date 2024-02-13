@@ -16,7 +16,7 @@ const Modal = ({ opened, Content, children }) => {
       {isOpened && (
         <div className='modal'>
           <div className='content'>
-            {/* 直接渲染Content作为React元素 */}
+            {/* render content */}
             {Content}
             <button
               type='button'

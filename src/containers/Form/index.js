@@ -1,19 +1,9 @@
 import { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import Field, { FIELD_TYPES } from '../../components/Field'
+import mockContactApi from './mockContactApi'
 import Select from '../../components/Select'
 import Button, { BUTTON_TYPES } from '../../components/Button'
-
-export const mockContactApi = (shouldFail = false) =>
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (shouldFail) {
-        reject(new Error('API call failed'))
-      } else {
-        resolve()
-      }
-    }, 1000)
-  })
 
 const Form = ({ onSuccess, onError }) => {
   const [sending, setSending] = useState(false)
@@ -34,7 +24,7 @@ const Form = ({ onSuccess, onError }) => {
     [onSuccess, onError]
   )
   return (
-    <form onSubmit={sendContact}>
+    <form onSubmit={sendContact} data-testid='form-testid'>
       <div className='row'>
         <div className='col'>
           <Field placeholder='' label='Nom' />

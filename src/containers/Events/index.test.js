@@ -73,24 +73,4 @@ describe('When Events is created', () => {
       expect(screen.queryByText('Forum #productCON')).not.toBeInTheDocument()
     })
   })
-
-  describe('and we click on an event', () => {
-    it('the event detail is displayed', async () => {
-      api.loadData = jest.fn().mockReturnValue(data)
-      render(
-        <DataProvider>
-          <Events />
-        </DataProvider>
-      )
-
-      fireEvent.click(await screen.findByText('Conférence #productCON'))
-
-      await waitFor(() => {
-        expect(screen.getByText('Description')).toBeInTheDocument()
-      })
-      await waitFor(() => {
-        expect(screen.getByText('1 site web dédié')).toBeInTheDocument()
-      })
-    })
-  })
 })

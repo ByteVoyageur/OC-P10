@@ -1,30 +1,37 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
-import Icon from "../../components/Icon";
-import "./style.scss";
+import PropTypes from 'prop-types'
+import { useState, useEffect } from 'react'
+import Icon from '../../components/Icon'
+import './style.scss'
 
 const Modal = ({ opened, Content, children }) => {
-  const [isOpened, setIsOpened] = useState(opened);
+  const [isOpened, setIsOpened] = useState(opened)
+
+  useEffect(() => {
+    setIsOpened(opened)
+  }, [opened])
+
   return (
     <>
       {children({ isOpened, setIsOpened })}
       {isOpened && (
-        <div className="modal">
-          <div className="content">
+        <div className='modal'>
+          <div className='content'>
+            {/* render content */}
             {Content}
             <button
-              type="button"
-              data-testid="close-modal"
+              type='button'
+              data-testid='close-modal'
               onClick={() => setIsOpened(false)}
+              aria-label='Close'
             >
-              <Icon name="close" />
+              <Icon name='close' />
             </button>
           </div>
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
 Modal.defaultProps = {
   opened: false,
@@ -32,8 +39,8 @@ Modal.defaultProps = {
 
 Modal.propTypes = {
   opened: PropTypes.bool,
-  Content: PropTypes.node.isRequired,
+  Content: PropTypes.element.isRequired, // nessesary
   children: PropTypes.func.isRequired,
 }
 
-export default Modal;
+export default Modal
